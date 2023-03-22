@@ -16,6 +16,8 @@ builder.Services.AddDbContext<ShopContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+builder.Services.AddScoped<DbContext, ShopContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
