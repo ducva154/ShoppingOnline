@@ -1,4 +1,5 @@
-﻿using ShoppingOnline.DTO.Constants;
+﻿using Microsoft.AspNetCore.Identity;
+using ShoppingOnline.DTO.Constants;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,7 +29,7 @@ namespace ShoppingOnline.DTO.Entities
         [MaxLength(50)]
         public string Status { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual IdentityUser User { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

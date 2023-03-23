@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,9 @@ using System.Threading.Tasks;
 
 namespace ShoppingOnline.DTO.Entities
 {
-    public class ShopContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext
     {
-        public ShopContext(DbContextOptions options) : base(options) { }
-
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
+        public ApplicationDBContext(DbContextOptions options) : base(options) { }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -21,13 +19,6 @@ namespace ShoppingOnline.DTO.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasOne(u => u.Role)
-                    .WithMany(r => r.Users)
-                    .HasForeignKey("RoleId");
-            });
 
             modelBuilder.Entity<Product>(entity =>
             {
@@ -49,8 +40,30 @@ namespace ShoppingOnline.DTO.Entities
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.HasOne(o => o.User)
-                    .WithMany(u => u.Orders)
+                    .WithMany()
                     .HasForeignKey("UserId");
+            });
+
+            modelBuilder.Entity<Review>(entity =>
+            {
+                entity.HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey("UserId");
+
+                entity.HasOne(r => r.Product)
+                .WithMany(p => p.Reviews)
+                .HasForeignKey("ProductId");
+            });
+
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey("UserId");
+
+                entity.HasOne(c => c.Product)
+                .WithMany(p => p.CartItems)
+                .HasForeignKey("ProductId");
             });
         }
     }

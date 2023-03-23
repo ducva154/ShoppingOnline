@@ -34,5 +34,8 @@ namespace ShoppingOnline.DTO.Entities
         public virtual ICollection<Category> Categories { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
 
+        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
+
     }
 }

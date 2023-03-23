@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -9,18 +9,16 @@ using System.Threading.Tasks;
 
 namespace ShoppingOnline.DTO.Entities
 {
-    [Table("Role")]
-    public class Role
+    public class Review
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid RoleId { get; set; }
+        public Guid ReviewId{ get; set; }
         [Required]
-        [MaxLength(255)]
-        public string Name { get; set; }
-        [DefaultValue(false)]
-        public bool Status { get; set; }
+        [StringLength(1000)]
+        public string Content { get; set; }
 
-        public virtual ICollection<User> Users { get; set; }
+        public virtual IdentityUser User{ get; set; }
+        public virtual Product Product { get; set; }
     }
 }

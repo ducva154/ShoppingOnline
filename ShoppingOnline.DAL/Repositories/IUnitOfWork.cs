@@ -8,8 +8,6 @@ namespace ShoppingOnline.DAL.Repositories
 {
     public interface IUnitOfWork
     {
-        IUserRepository UserRepository { get; }
-        IRoleRepository RoleRepository { get; }
         IProductRepository ProductRepository { get; }
         ICategoryRepository CategoryRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }

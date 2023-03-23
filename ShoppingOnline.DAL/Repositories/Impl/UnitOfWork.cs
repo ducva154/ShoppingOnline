@@ -10,8 +10,6 @@ namespace ShoppingOnline.DAL.Repositories.Impl
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext _context;
-        private IUserRepository _userRepository;
-        private IRoleRepository _roleRepository;
         private IProductRepository _productRepository;
         private ICategoryRepository _categoryRepository;
         private IOrderRepository _orderRepository;
@@ -21,28 +19,7 @@ namespace ShoppingOnline.DAL.Repositories.Impl
         {
                 _context = context;
         }
-        public IUserRepository UserRepository
-        {
-            get
-            {
-                if (_userRepository == null)
-                {
-                    _userRepository = new UserRepository(_context);
-                }
-                return _userRepository;
-            }
-        }
-        public IRoleRepository RoleRepository
-        {
-            get
-            {
-                if (_roleRepository == null)
-                {
-                    _roleRepository = new RoleRepository(_context);
-                }
-                return _roleRepository;
-            }
-        }
+        
         public IProductRepository ProductRepository
         {
             get
