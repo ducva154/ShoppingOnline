@@ -17,6 +17,6 @@ namespace ShoppingOnline.DTO.Entities
         public int Quantity { get; set; }
 
         public virtual Product Product { get; set; }
-        public virtual IdentityUser User { get; set; }
+        public virtual CustomUser User { get; set; }
     }
 }

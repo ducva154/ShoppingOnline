@@ -5,22 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShoppingOnline.DTO.Models.Request
+namespace ShoppingOnline.DTO.Models.Request.Authentication
 {
-    public class RegisterRequest
+    public class LoginRequest
     {
         [Required]
         [StringLength(50)]
         public string UserName { get; set; }
         [Required]
-        [StringLength(50)]
-        [EmailAddress]
-        public string Email { get; set; }
-        [Required]
         [StringLength(50, MinimumLength = 6)]
         public string Password { get; set; }
-        [Required]
-        [StringLength(50, MinimumLength = 6)]
-        public string ConfirmPassword { get; set; }
     }
 }

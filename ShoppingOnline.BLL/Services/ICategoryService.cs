@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ShoppingOnline.DTO.Models.Request.Category;
+using ShoppingOnline.DTO.Models.Response.Category;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,7 @@ namespace ShoppingOnline.BLL.Services
     {
         // Get All
         // Add
+        AddCategoryResponse AddCategory(AddCategoryRequest request);
         // Update
         // Delete -  change status
     }

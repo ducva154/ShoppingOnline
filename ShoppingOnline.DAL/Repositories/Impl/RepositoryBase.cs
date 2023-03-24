@@ -21,9 +21,19 @@ namespace ShoppingOnline.DAL.Repositories.Impl
             _context.Set<TEntity>().Add(objModel);
         }
 
+        public async Task AddAsync(TEntity objModel)
+        {
+            await _context.Set<TEntity>().AddAsync(objModel);
+        }
+
         public void AddRange(IEnumerable<TEntity> objModel)
         {
             _context.Set<TEntity>().AddRange(objModel);
+        }
+
+        public async Task AddRangeAsync(IEnumerable<TEntity> objModel)
+        {
+            await _context.Set<TEntity>().AddRangeAsync(objModel);
         }
 
         public TEntity GetId(int id)

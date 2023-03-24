@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingOnline.DTO.Entities
 {
-    public class ApplicationDBContext : IdentityDbContext
+    public class ApplicationDBContext : IdentityDbContext<CustomUser>
     {
         public ApplicationDBContext(DbContextOptions options) : base(options) { }
         public DbSet<Product> Products { get; set; }

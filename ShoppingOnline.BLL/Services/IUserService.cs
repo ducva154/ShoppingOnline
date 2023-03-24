@@ -1,5 +1,5 @@
-﻿using ShoppingOnline.DTO.Models.Request;
-using ShoppingOnline.DTO.Models.Response;
+﻿using ShoppingOnline.DTO.Models.Request.Authentication;
+using ShoppingOnline.DTO.Models.Response.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +11,10 @@ namespace ShoppingOnline.BLL.Services
     public interface IUserService
     {
         Task<RegisterResponse> RegisterUserAsync(RegisterRequest request);
-        // Create account - admin
         // Login
+        Task<LoginResponse> LoginUserAsync(LoginRequest request);
+        // Add  role
+        // Remove role
         // Forgot pasword
         // Edit profile
         // Change password

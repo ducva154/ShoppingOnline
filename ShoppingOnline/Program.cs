@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ShoppingOnline.BLL.Services;
 using ShoppingOnline.BLL.Services.Impl;
+using ShoppingOnline.DAL.Repositories;
+using ShoppingOnline.DAL.Repositories.Impl;
 using ShoppingOnline.DTO.Entities;
 using System.Drawing.Imaging;
 using System.Text;
@@ -23,13 +25,15 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<CustomUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
 }).AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddSignInManager<SignInManager<CustomUser>>()
+    .AddUserManager<UserManager<CustomUser>>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(auth =>
@@ -50,7 +54,10 @@ builder.Services.AddAuthentication(auth =>
     };
 });
 builder.Services.AddScoped<DbContext, ApplicationDBContext>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 

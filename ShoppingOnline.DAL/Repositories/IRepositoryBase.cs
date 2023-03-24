@@ -10,7 +10,9 @@ namespace ShoppingOnline.DAL.Repositories
     public interface IRepositoryBase<TEntity> where TEntity : class
     {
         void Add(TEntity objModel);
+        Task AddAsync(TEntity objModel);
         void AddRange(IEnumerable<TEntity> objModel);
+        Task AddRangeAsync(IEnumerable<TEntity> objModel);
         TEntity GetId(int id);
         Task<TEntity> GetIdAsync(int id);
         TEntity Get(Expression<Func<TEntity, bool>> predicate);
