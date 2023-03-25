@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ShoppingOnline.DTO.Constants;
@@ -8,6 +9,7 @@ using ShoppingOnline.DTO.Models.Request.Authentication;
 using ShoppingOnline.DTO.Models.Response.Authentication;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -20,12 +22,14 @@ namespace ShoppingOnline.BLL.Services.Impl
     {
         private readonly UserManager<CustomUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
 
-        public UserService(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public UserService(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IEmailService emailService, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _emailService = emailService;
             _configuration = configuration;
         }
 
@@ -63,6 +67,16 @@ namespace ShoppingOnline.BLL.Services.Impl
                 var addRoleResult = await _userManager.AddToRoleAsync(identityUser, request.RoleName.IsNullOrEmpty() ? RoleConstant.USER : request.RoleName);
                 if (addRoleResult.Succeeded)
                 {
+                    if (!identityUser.EmailConfirmed)
+                    {
+                        var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
+                        string url = $"{_configuration["Host"]}/api/Authentication/ConfirmEmail?{identityUser.Id}&{confirmEmailToken}";
+                        string subject = "CONFIRM EMAIL";
+                        string textContent = "Please confirm your email by ";
+                        string htmlContent = $"<a href='{url}'>Click here</a>";
+                        await _emailService.SendEmailAsync(identityUser.Email, subject, textContent, htmlContent);
+                    }
+
                     return new RegisterResponse
                     {
                         Message = "Create user successfully!",
@@ -131,6 +145,266 @@ namespace ShoppingOnline.BLL.Services.Impl
                 Message = "Login successfully!",
                 IsSuccess = true,
                 Token = tokenAsString
+            };
+        }
+
+        public async Task<ConfirmEmailResponse> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new ConfirmEmailResponse
+                {
+                    Message = "User not found!",
+                    IsSuccess = false
+                };
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return new ConfirmEmailResponse
+                {
+                    Message = "Confirm email successfully",
+                    IsSuccess = true
+                };
+            }
+
+            return new ConfirmEmailResponse
+            {
+                Message = "Can't confirm email!",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description),
+            };
+        }
+
+        public async Task<AddRoleToAccountResponse> AddRoleToAccountAsync(AddRoleToAccountRequest request)
+        {
+            if (request == null)
+            {
+                return new AddRoleToAccountResponse
+                {
+                    Message = "Request is null!",
+                    IsSuccess = false,
+                };
+            }
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                return new AddRoleToAccountResponse
+                {
+                    Message = "User not found!",
+                    IsSuccess = false,
+                };
+            }
+
+            var role = await _roleManager.FindByNameAsync(request.RoleName);
+            if (role == null)
+            {
+                return new AddRoleToAccountResponse
+                {
+                    Message = "Role not found!",
+                    IsSuccess = false,
+                };
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, request.RoleName);
+
+            if (result.Succeeded)
+            {
+                return new AddRoleToAccountResponse
+                {
+                    Message = "Add Role to Account successfully!",
+                    IsSuccess = true,
+                };
+            }
+
+            return new AddRoleToAccountResponse
+            {
+                Message = "Can't add role to account",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+        }
+
+        public async Task<RemoveRoleFromAccountResponse> RemoveRoleFromAccountAsync(RemoveRoleFromAccountRequest request)
+        {
+            if (request == null)
+            {
+                return new RemoveRoleFromAccountResponse
+                {
+                    Message = "Request is null!",
+                    IsSuccess = false,
+                };
+            }
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                return new RemoveRoleFromAccountResponse
+                {
+                    Message = "User not found!",
+                    IsSuccess = false,
+                };
+            }
+
+            var role = await _roleManager.FindByNameAsync(request.RoleName);
+            if (role == null)
+            {
+                return new RemoveRoleFromAccountResponse
+                {
+                    Message = "Role not found!",
+                    IsSuccess = false,
+                };
+            }
+
+            var result = await _userManager.RemoveFromRoleAsync(user, request.RoleName);
+
+            if (result.Succeeded)
+            {
+                return new RemoveRoleFromAccountResponse
+                {
+                    Message = "Remove role from account successfully!",
+                    IsSuccess = true,
+                };
+            }
+
+            return new RemoveRoleFromAccountResponse
+            {
+                Message = "Can't remove role from account",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+        }
+
+        public async Task<EditProfileResponse> EditProfileAsync(string userId, EditProfileRequest request)
+        {
+            if (request == null)
+            {
+                return new EditProfileResponse
+                {
+                    Message = "Request is null!",
+                    IsSuccess = false,
+                };
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new EditProfileResponse
+                {
+                    Message = "User not found!",
+                    IsSuccess = false,
+                };
+            }
+
+            user.FullName = request.FullName;
+            user.Avatar = request.Avatar;
+            user.PhoneNumber = request.Contact;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return new EditProfileResponse
+                {
+                    Message = "Update profile successfully!",
+                    IsSuccess = true,
+                };
+            }
+
+            return new EditProfileResponse
+            {
+                Message = "Can't update profile!",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+        }
+
+        public async Task<ChangePasswordResponse> ChangePasswordAsync(string userId, ChangePasswordRequest request)
+        {
+            if (request == null)
+            {
+                return new ChangePasswordResponse
+                {
+                    Message = "Request is null!",
+                    IsSuccess = false,
+                };
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new ChangePasswordResponse
+                {
+                    Message = "User not found!",
+                    IsSuccess = false,
+                };
+            }
+
+            if (!request.NewPassword.Equals(request.ConfirmPassword))
+            {
+                return new ChangePasswordResponse
+                {
+                    Message = "Confirm password doesn't match!",
+                    IsSuccess = false,
+                };
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return new ChangePasswordResponse
+                {
+                    Message = "Change password successfully!",
+                    IsSuccess = true,
+                };
+            }
+
+            return new ChangePasswordResponse
+            {
+                Message = "Can't change password!",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+        }
+
+        public async Task<GetAllUserResponse> GetAllUserAsync()
+        {
+            return new GetAllUserResponse
+            {
+                Users = await _userManager.Users.Select(u => new GetUserDetailResponse
+                {
+                    UserId = u.Id,
+                    Avatar = u.Avatar,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Contact = u.PhoneNumber,
+                    Status = u.Status.HasValue ? u.Status.Value : true,
+                    VerifyEmail = u.EmailConfirmed,
+                    VerifyPhone = u.PhoneNumberConfirmed
+                }).ToListAsync(),
+            };
+        }
+
+        public async Task<GetUserDetailResponse> GetUserDetailAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var roles = await _userManager.GetRolesAsync(user);
+            return new GetUserDetailResponse
+            {
+                UserId = userId,
+                Avatar = user.Avatar,
+                FullName = user.FullName,
+                Email = user.Email,
+                Contact = user.PhoneNumber,
+                Roles = roles,
+                Status = user.Status.HasValue ? user.Status.Value : true,
+                VerifyEmail = user.EmailConfirmed,
+                VerifyPhone = user.PhoneNumberConfirmed
             };
         }
     }

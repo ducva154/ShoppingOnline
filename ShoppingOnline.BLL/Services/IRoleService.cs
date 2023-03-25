@@ -17,8 +17,8 @@ namespace ShoppingOnline.BLL.Services
     public interface IRoleService
     {
         Task<GetListRoleResponse>  GetAllRoles();
-        Task<AddRoleResponse> AddRole([FromBody]AddRoleRequest request);
-        Task<UpdateRoleResponse> UpdateRole(string id, [FromBody] UpdateRoleRequest request);
+        Task<AddRoleResponse> AddRole(AddRoleRequest request);
+        Task<UpdateRoleResponse> UpdateRole(string id, UpdateRoleRequest request);
         Task<DeleteRoleResponse> DeleteRole(string id);
     }
 }
