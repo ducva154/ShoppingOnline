@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ShoppingOnline.DTO.Models.Request.Product;
+using ShoppingOnline.DTO.Models.Response.Product;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +10,11 @@ namespace ShoppingOnline.BLL.Services
 {
     public interface IProductService
     {
-        // Create product
-        // Edit product
-        // Delete product
-        // Get all
-        // Get detail
-        // Get product by Category
-
+        CreateProductResponse CreateProduct(CreateProductRequest request);
+        UpdateProductResponse UpdateProduct(string productId, UpdateProductRequest request);
+        DeleteProductResponse DeleteProduct(string productId);
+        GetAllProductResponse GetAllProduct();
+        GetProductDetailResponse GetProductDetail(string productId);
+        GetProductByCategoryResponse GetProductByCategory(string categoryId);
     }
 }

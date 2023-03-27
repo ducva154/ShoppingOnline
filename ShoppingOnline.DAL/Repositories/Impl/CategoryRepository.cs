@@ -11,5 +11,12 @@ namespace ShoppingOnline.DAL.Repositories.Impl
     public class CategoryRepository : RepositoryBase<Category>, ICategoryRepository
     {
         public CategoryRepository(DbContext context) : base(context) { }
+
+        public IEnumerable<Category> GetListCategoriesByProduct(Product product)
+        {
+            var productEntry = _context.Entry(product);
+            productEntry.Collection(product => product.Categories).Load();
+            return product.Categories;
+        }
     }
 }

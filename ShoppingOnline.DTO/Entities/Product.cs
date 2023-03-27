@@ -29,13 +29,12 @@ namespace ShoppingOnline.DTO.Entities
         public string Image { get; set; }
         public double Rating { get; set; }
         [DefaultValue(false)]
-        public bool Status { get; set; }
 
-        public virtual ICollection<Category> Categories { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public IEnumerable<Category> Categories { get; set; }
+        public IEnumerable<OrderDetail> OrderDetails { get; set; }
 
-        public virtual ICollection<Review> Reviews { get; set; }
-        public virtual ICollection<CartItem> CartItems { get; set; }
+        public IEnumerable<Review> Reviews { get; set; }
+        public IEnumerable<CartItem> CartItems { get; set; }
 
     }
 }

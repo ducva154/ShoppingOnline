@@ -29,7 +29,7 @@ namespace ShoppingOnline.DTO.Entities
         [MaxLength(50)]
         public string Status { get; set; }
 
-        public virtual CustomUser User { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public CustomUser User { get; set; }
+        public IEnumerable<OrderDetail> OrderDetails { get; set; }
     }
 }

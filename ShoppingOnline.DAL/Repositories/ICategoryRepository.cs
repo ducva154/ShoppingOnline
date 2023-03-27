@@ -9,5 +9,6 @@ namespace ShoppingOnline.DAL.Repositories
 {
     public interface ICategoryRepository : IRepositoryBase<Category>
     {
+        IEnumerable<Category> GetListCategoriesByProduct(Product product);
     }
 }

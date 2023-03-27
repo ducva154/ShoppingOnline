@@ -8,7 +8,6 @@ namespace ShoppingOnline.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;

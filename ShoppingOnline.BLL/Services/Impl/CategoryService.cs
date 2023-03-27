@@ -32,7 +32,6 @@ namespace ShoppingOnline.BLL.Services.Impl
             Category category = new Category
             {
                 Name = request.Name,
-                Status = true
             };
             try
             {

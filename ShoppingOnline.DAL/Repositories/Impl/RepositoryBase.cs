@@ -10,7 +10,7 @@ namespace ShoppingOnline.DAL.Repositories.Impl
 {
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
     {
-        private readonly DbContext _context;
+        protected readonly DbContext _context;
         public RepositoryBase(DbContext context)
         {
             _context = context;
@@ -36,12 +36,12 @@ namespace ShoppingOnline.DAL.Repositories.Impl
             await _context.Set<TEntity>().AddRangeAsync(objModel);
         }
 
-        public TEntity GetId(int id)
+        public TEntity GetId(Guid id)
         {
             return _context.Set<TEntity>().Find(id);
         }
 
-        public async Task<TEntity> GetIdAsync(int id)
+        public async Task<TEntity> GetIdAsync(Guid id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }

@@ -19,8 +19,7 @@ namespace ShoppingOnline.DTO.Entities
         [MaxLength(255)]
         public string Name { get; set; }
         [DefaultValue(false)]
-        public bool Status { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; }
     }
 }
