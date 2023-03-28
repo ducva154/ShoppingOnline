@@ -18,7 +18,7 @@ namespace ShoppingOnline.DTO.Entities
         [StringLength(1000)]
         public string Content { get; set; }
 
-        public CustomUser User{ get; set; }
-        public Product Product { get; set; }
+        public virtual CustomUser User{ get; set; }
+        public virtual Product Product { get; set; }
     }
 }

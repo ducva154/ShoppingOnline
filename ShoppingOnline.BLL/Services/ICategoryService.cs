@@ -10,10 +10,10 @@ namespace ShoppingOnline.BLL.Services
 {
     public interface ICategoryService
     {
-        // Get All
-        // Add
+        GetAllCategoryResponse GetAllCategory();
+        GetCategoryDetailRepsonse GetCategoryDetail(string categoryId);
         AddCategoryResponse AddCategory(AddCategoryRequest request);
-        // Update
-        // Delete -  change status
+        UpdateCategoryResponse UpdateCategory(string categoryId, UpdateCategoryRequest request);
+        DeleteCategoryResponse DeleteCategory(string categoryId);
     }
 }

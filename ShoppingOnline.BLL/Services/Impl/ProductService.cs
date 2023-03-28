@@ -96,7 +96,7 @@ namespace ShoppingOnline.BLL.Services.Impl
                 product.StockQuantity = request.StockQuantity;
                 product.Image = request.Image;
                 product.Rating = request.Rating;
-                //product.Categories = request.CategoryIds.Select(cid => _unitOfWork.CategoryRepository.GetId(Guid.Parse(cid))).ToList();
+                //product.Categories = request.CategoryIds.Select(cid => _unitOfWork.CategoryRepository.GetId(Guid.Parse(cid)));
                 _unitOfWork.ProductRepository.Update(product);
                 _unitOfWork.SaveChanges();
                 return new UpdateProductResponse
@@ -172,7 +172,8 @@ namespace ShoppingOnline.BLL.Services.Impl
                     Price = product.Price,
                     StockQuantity = product.StockQuantity,
                     Rating = product.Rating,
-                    Categories = _unitOfWork.CategoryRepository.GetListCategoriesByProduct(product).Select(category => category.Name)
+                    //Categories = _unitOfWork.CategoryRepository.GetListCategoriesByProduct(product).Select(category => category.Name)
+                    Categories = product.Categories.Select(category => category.Name)
                 })
             };
         }
@@ -189,7 +190,8 @@ namespace ShoppingOnline.BLL.Services.Impl
                 };
             }
 
-            var products = _unitOfWork.ProductRepository.GetListProductByCategory(category);
+            //var products = _unitOfWork.ProductRepository.GetListProductByCategory(category);
+            var products = category.Products;
             if (products.Count() == 0)
             {
                 return new GetProductByCategoryResponse
@@ -219,7 +221,7 @@ namespace ShoppingOnline.BLL.Services.Impl
             var product = _unitOfWork.ProductRepository.GetId(Guid.Parse(productId));
             if (product == null)
             {
-                new GetProductDetailResponse
+                return new GetProductDetailResponse
                 {
                     Message = "Product not found!"
                 };
@@ -238,7 +240,8 @@ namespace ShoppingOnline.BLL.Services.Impl
                     Brand = product.Brand,
                     StockQuantity = product.StockQuantity,
                     Rating = product.Rating,
-                    CategoryIds = _unitOfWork.CategoryRepository.GetListCategoriesByProduct(product).Select(category => category.CategoryId.ToString())
+                    //CategoryIds = _unitOfWork.CategoryRepository.GetListCategoriesByProduct(product).Select(category => category.CategoryId.ToString())
+                    CategoryIds = product.Categories.Select(category => category.CategoryId.ToString())
                 }
             };
         }

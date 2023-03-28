@@ -18,7 +18,7 @@ namespace ShoppingOnline.DTO.Entities
         public int Quantity { get; set; }
         public double Total { get; set; }
 
-        public Order Order { get; set; }
-        public Product Product { get; set; }
+        public virtual Order Order { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

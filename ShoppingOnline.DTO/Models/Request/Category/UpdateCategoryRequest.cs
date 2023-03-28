@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShoppingOnline.DTO.Models.Response.Product
+namespace ShoppingOnline.DTO.Models.Request.Category
 {
-    public class AddToCartResponse
+    public class UpdateCategoryRequest
     {
+        public string Name { get; set; }
+
     }
 }

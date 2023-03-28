@@ -25,5 +25,6 @@ namespace ShoppingOnline.DAL.Repositories
         Task<int> CountAsync();
         void Update(TEntity objModel);
         void Remove(TEntity objModel);
+        void RemoveRange(IEnumerable<TEntity> objModel);
     }
 }

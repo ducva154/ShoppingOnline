@@ -97,6 +97,11 @@ namespace ShoppingOnline.DAL.Repositories.Impl
             _context.Set<TEntity>().Remove(objModel);
         }
 
+        public void RemoveRange(IEnumerable<TEntity> objModel)
+        {
+            _context.Set<TEntity>().RemoveRange(objModel);
+        }
+
         public void SaveChanges()
         {
             _context.SaveChanges();

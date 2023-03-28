@@ -18,8 +18,7 @@ namespace ShoppingOnline.DTO.Entities
         [Required]
         [MaxLength(255)]
         public string Name { get; set; }
-        [DefaultValue(false)]
 
-        public IEnumerable<Product> Products { get; set; }
+        public virtual IEnumerable<Product> Products { get; set; }
     }
 }

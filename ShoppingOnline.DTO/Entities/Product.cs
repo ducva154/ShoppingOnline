@@ -30,11 +30,9 @@ namespace ShoppingOnline.DTO.Entities
         public double Rating { get; set; }
         [DefaultValue(false)]
 
-        public IEnumerable<Category> Categories { get; set; }
-        public IEnumerable<OrderDetail> OrderDetails { get; set; }
-
-        public IEnumerable<Review> Reviews { get; set; }
-        public IEnumerable<CartItem> CartItems { get; set; }
-
+        public virtual IEnumerable<Category> Categories { get; set; }
+        public virtual IEnumerable<OrderDetail> OrderDetails { get; set; }
+        public virtual IEnumerable<Review> Reviews { get; set; }
+        public virtual IEnumerable<CartItem> CartItems { get; set; } 
     }
 }

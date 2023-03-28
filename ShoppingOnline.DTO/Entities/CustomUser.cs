@@ -17,5 +17,7 @@ namespace ShoppingOnline.DTO.Entities
         public string? Avatar { get; set; }
         [DefaultValue(true)]
         public bool? Status { get; set; }
+
+        public virtual IEnumerable<CartItem> CartItems { get; set; }
     }
 }

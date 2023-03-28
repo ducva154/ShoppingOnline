@@ -16,6 +16,11 @@ namespace ShoppingOnline.DTO.Entities
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -63,7 +68,7 @@ namespace ShoppingOnline.DTO.Entities
             modelBuilder.Entity<CartItem>(entity =>
             {
                 entity.HasOne(c => c.User)
-                    .WithMany()
+                    .WithMany(u => u.CartItems)
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade);
 

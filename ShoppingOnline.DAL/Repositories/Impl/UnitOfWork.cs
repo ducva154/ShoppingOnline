@@ -14,6 +14,7 @@ namespace ShoppingOnline.DAL.Repositories.Impl
         private ICategoryRepository _categoryRepository;
         private IOrderRepository _orderRepository;
         private IOrderDetailRepository _orderDetailRepository;
+        private ICartItemRepository _cartItemRepository;
 
         public UnitOfWork(DbContext context)
         {
@@ -64,6 +65,18 @@ namespace ShoppingOnline.DAL.Repositories.Impl
                     _orderDetailRepository = new OrderDetailRepository(_context);
                 }
                 return _orderDetailRepository;
+            }
+        }
+
+        public ICartItemRepository CartItemRepository
+        {
+            get
+            {
+                if (_cartItemRepository == null)
+                {
+                    _cartItemRepository = new CartItemRepository(_context);
+                }
+                return _cartItemRepository;
             }
         }
 

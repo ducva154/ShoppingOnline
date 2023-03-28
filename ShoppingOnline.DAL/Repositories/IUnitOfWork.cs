@@ -12,6 +12,7 @@ namespace ShoppingOnline.DAL.Repositories
         ICategoryRepository CategoryRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }
         IOrderRepository OrderRepository { get; }
+        ICartItemRepository CartItemRepository { get; }
         void SaveChanges();
     }
 }
