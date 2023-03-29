@@ -16,6 +16,7 @@ namespace ShoppingOnline.DTO.Models.Response.Cart
     public class GetCartItemByUserResponseItem
     {
         public string CartItemId { get; set; }
+        public string ProductId { get; set; }
         public string ProductImage { get; set; }
         public string ProductName { get; set; }
         public double ProductPrice { get; set; }

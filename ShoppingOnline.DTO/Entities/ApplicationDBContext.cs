@@ -47,7 +47,7 @@ namespace ShoppingOnline.DTO.Entities
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.HasOne(o => o.User)
-                    .WithMany()
+                    .WithMany(u => u.Orders)
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade);
             });

@@ -19,5 +19,6 @@ namespace ShoppingOnline.DTO.Entities
         public bool? Status { get; set; }
 
         public virtual IEnumerable<CartItem> CartItems { get; set; }
+        public virtual IEnumerable<Order> Orders { get; set; }
     }
 }

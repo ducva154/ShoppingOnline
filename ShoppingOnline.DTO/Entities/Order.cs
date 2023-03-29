@@ -18,6 +18,7 @@ namespace ShoppingOnline.DTO.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid OrderId { get; set; }
+        public string UserId { get; set; }
         public double Amount { get; set; }
         [MaxLength(255)]
         public string Address { get; set; }

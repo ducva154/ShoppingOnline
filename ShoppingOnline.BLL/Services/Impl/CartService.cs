@@ -109,6 +109,7 @@ namespace ShoppingOnline.BLL.Services.Impl
                 CartItems = cartItems.Select(item => new GetCartItemByUserResponseItem
                 {
                     CartItemId = item.CartItemId.ToString(),
+                    ProductId = item.ProductId.ToString(),
                     ProductImage = item.Product.Image,
                     ProductName = item.Product.Name,
                     ProductPrice = item.Product.Price,
