@@ -13,6 +13,7 @@ namespace ShoppingOnline.DAL.Repositories
         IOrderDetailRepository OrderDetailRepository { get; }
         IOrderRepository OrderRepository { get; }
         ICartItemRepository CartItemRepository { get; }
+        IReviewRepository ReviewRepository { get; }
         void SaveChanges();
     }
 }
