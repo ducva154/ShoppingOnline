@@ -12,6 +12,7 @@ namespace ShoppingOnline.BLL.Services
     public interface IUserService
     {
         Task<RegisterResponse> RegisterUserAsync(RegisterRequest request);
+        Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request);
         Task<LoginResponse> LoginUserAsync(LoginRequest request);
         Task<AddRoleToAccountResponse> AddRoleToAccountAsync(AddRoleToAccountRequest request);
         Task<RemoveRoleFromAccountResponse> RemoveRoleFromAccountAsync(RemoveRoleFromAccountRequest request);
@@ -20,11 +21,10 @@ namespace ShoppingOnline.BLL.Services
         Task<GetAllUserResponse> GetAllUserAsync();
         Task<GetUserDetailResponse> GetUserDetailAsync(string userId);
 
-        // Verify email - chua gui dc email
+        // SendEmailVerify
         Task<ConfirmEmailResponse> ConfirmEmailAsync(string userId, string token);
-        // Forgot pasword - chua gui dc email nen chua lam dc
-        // Verify phone
-
-
+        // Send SMS verify
+        // ConfirmPhoneNumber
+        // Forgot pasword
     }
 }

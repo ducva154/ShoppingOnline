@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingOnline.DTO.Models.Request.Authentication
 {
-    public class RegisterRequest
+    public class CreateAccountRequest
     {
         [Required]
         [StringLength(50)]
@@ -22,5 +22,15 @@ namespace ShoppingOnline.DTO.Models.Request.Authentication
         [Required]
         [StringLength(50, MinimumLength = 6)]
         public string ConfirmPassword { get; set; }
+        [StringLength(50)]
+        public string RoleName { get; set; }
+        [StringLength(50)]
+        public string FullName { get; set; }
+        public string Avatar { get; set; }
+        [StringLength(20)]
+        public string Contact { get; set; }
+        public bool Status { get; set; }
+        public bool VerifyEmail { get; set; }
+        public bool VerifyContact { get; set; }
     }
 }

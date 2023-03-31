@@ -19,11 +19,11 @@ namespace ShoppingOnline.Controllers
         }
 
         [HttpPost("Add")]
-        public IActionResult AddProduct([FromBody] CreateProductRequest request)
+        public async Task<IActionResult> AddProduct([FromBody] CreateProductRequest request)
         {
             if (ModelState.IsValid)
             {
-                var response = _productService.CreateProduct(request);
+                var response = await _productService.CreateProduct(request);
                 if (response.IsSuccess)
                 {
                     return Ok(response);
@@ -34,11 +34,11 @@ namespace ShoppingOnline.Controllers
         }
 
         [HttpPut("Update/{productId}")]
-        public IActionResult UpdateProduct(string productId, [FromBody] UpdateProductRequest request)
+        public async Task<IActionResult> UpdateProduct(string productId, [FromBody] UpdateProductRequest request)
         {
             if (ModelState.IsValid)
             {
-                var response = _productService.UpdateProduct(productId, request);
+                var response = await _productService.UpdateProduct(productId, request);
                 if (response.IsSuccess)
                 {
                     return Ok(response);

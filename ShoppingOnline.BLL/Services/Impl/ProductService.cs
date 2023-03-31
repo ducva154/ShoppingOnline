@@ -1,5 +1,6 @@
 ﻿using ShoppingOnline.DAL.Repositories;
 using ShoppingOnline.DTO.Entities;
+using ShoppingOnline.DTO.Models.Request.Image;
 using ShoppingOnline.DTO.Models.Request.Product;
 using ShoppingOnline.DTO.Models.Response.Product;
 using System;
@@ -14,13 +15,15 @@ namespace ShoppingOnline.BLL.Services.Impl
     public class ProductService : IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IImageService _imageService;
 
-        public ProductService(IUnitOfWork unitOfWork)
+        public ProductService(IUnitOfWork unitOfWork, IImageService imageService)
         {
             _unitOfWork = unitOfWork;
+            _imageService = imageService;
         }
 
-        public CreateProductResponse CreateProduct(CreateProductRequest request)
+        public async Task<CreateProductResponse> CreateProduct(CreateProductRequest request)
         {
             if (request == null)
             {
@@ -33,6 +36,10 @@ namespace ShoppingOnline.BLL.Services.Impl
 
             try
             {
+                var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
+                {
+                    Base64 = request.Image
+                });
                 var product = new Product
                 {
                     Name = request.Name,
@@ -41,11 +48,11 @@ namespace ShoppingOnline.BLL.Services.Impl
                     Discount = request.Discount,
                     Brand = request.Brand,
                     StockQuantity = request.StockQuantity,
-                    Image = request.Image,
+                    Image = uploadResult.Uri.ToString(),
                     Rating = request.Rating,
                     Categories = request.CategoryIds.Select(cid => _unitOfWork.CategoryRepository.GetId(Guid.Parse(cid))).ToList(),
                 };
-                _unitOfWork.ProductRepository.AddAsync(product);
+                _unitOfWork.ProductRepository.Add(product);
                 _unitOfWork.SaveChanges();
                 return new CreateProductResponse
                 {
@@ -65,7 +72,7 @@ namespace ShoppingOnline.BLL.Services.Impl
 
         }
 
-        public UpdateProductResponse UpdateProduct(string productId, UpdateProductRequest request)
+        public async Task<UpdateProductResponse> UpdateProduct(string productId, UpdateProductRequest request)
         {
             if (request == null)
             {
@@ -88,13 +95,17 @@ namespace ShoppingOnline.BLL.Services.Impl
 
             try
             {
+                var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
+                {
+                    Base64 = request.Image
+                });
                 product.Name = request.Name;
                 product.Description = request.Description;
                 product.Price = request.Price;
                 product.Discount = request.Discount;
                 product.Brand = request.Brand;
                 product.StockQuantity = request.StockQuantity;
-                product.Image = request.Image;
+                product.Image = uploadResult.Uri.ToString();
                 product.Rating = request.Rating;
                 //product.Categories = request.CategoryIds.Select(cid => _unitOfWork.CategoryRepository.GetId(Guid.Parse(cid)));
                 _unitOfWork.ProductRepository.Update(product);

@@ -1,5 +1,5 @@
 ﻿using ShoppingOnline.DTO.Migrations;
-using ShoppingOnline.DTO.Models.Request;
+using ShoppingOnline.DTO.Models.Request.Review;
 using ShoppingOnline.DTO.Models.Response.Review;
 using System;
 using System.Collections.Generic;

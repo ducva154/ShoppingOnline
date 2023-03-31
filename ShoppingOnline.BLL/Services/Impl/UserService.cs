@@ -15,6 +15,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using ShoppingOnline.DTO.Models.Request.Image;
+using CloudinaryDotNet.Actions;
 
 namespace ShoppingOnline.BLL.Services.Impl
 {
@@ -23,13 +25,15 @@ namespace ShoppingOnline.BLL.Services.Impl
         private readonly UserManager<CustomUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailService _emailService;
+        private readonly IImageService _imageService;
         private readonly IConfiguration _configuration;
 
-        public UserService(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IEmailService emailService, IConfiguration configuration)
+        public UserService(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IEmailService emailService, IImageService imageService, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _emailService = emailService;
+            _imageService = imageService;
             _configuration = configuration;
         }
 
@@ -37,7 +41,11 @@ namespace ShoppingOnline.BLL.Services.Impl
         {
             if (request == null)
             {
-                throw new BusinessException("Register request is null!");
+                return new RegisterResponse
+                {
+                    Message = "Register request is null!",
+                    IsSuccess = false
+                };
             }
 
             if (request.Password != request.ConfirmPassword)
@@ -48,35 +56,19 @@ namespace ShoppingOnline.BLL.Services.Impl
                     IsSuccess = false
                 };
             }
-
+            
             var identityUser = new CustomUser
             {
                 UserName = request.UserName,
-                Email = request.Email,
-                EmailConfirmed = request.VerifyEmail.HasValue ? request.VerifyEmail.Value : false,
-                PhoneNumber = request.Contact,
-                PhoneNumberConfirmed = request.VerifyContact.HasValue ? request.VerifyContact.Value : false,
-                Avatar = request.Avatar,
-                Status = request.Status.HasValue ? request.Status : true,
-                FullName = request.FullName
+                Email = request.Email
             };
 
             var result = await _userManager.CreateAsync(identityUser, request.Password);
             if (result.Succeeded)
             {
-                var addRoleResult = await _userManager.AddToRoleAsync(identityUser, request.RoleName.IsNullOrEmpty() ? RoleConstant.USER : request.RoleName);
+                var addRoleResult = await _userManager.AddToRoleAsync(identityUser, RoleConstant.USER);
                 if (addRoleResult.Succeeded)
                 {
-                    if (!identityUser.EmailConfirmed)
-                    {
-                        var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
-                        string url = $"{_configuration["Host"]}/api/Authentication/ConfirmEmail?{identityUser.Id}&{confirmEmailToken}";
-                        string subject = "CONFIRM EMAIL";
-                        string textContent = "Please confirm your email by ";
-                        string htmlContent = $"<a href='{url}'>Click here</a>";
-                        await _emailService.SendEmailAsync(identityUser.Email, subject, textContent, htmlContent);
-                    }
-
                     return new RegisterResponse
                     {
                         Message = "Create user successfully!",
@@ -91,6 +83,68 @@ namespace ShoppingOnline.BLL.Services.Impl
             }
 
             return new RegisterResponse
+            {
+                Message = "Can't create user!",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+        }
+
+        public async Task<CreateAccountResponse> CreateAccountAsync(CreateAccountRequest request)
+        {
+            if (request == null)
+            {
+                return new CreateAccountResponse
+                {
+                    Message = "Create account request is null!",
+                    IsSuccess = false
+                };
+            }
+
+            if (request.Password != request.ConfirmPassword)
+            {
+                return new CreateAccountResponse
+                {
+                    Message = "Confirm password doesn't match password!",
+                    IsSuccess = false
+                };
+            }
+            var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
+            {
+                Base64 = request.Avatar
+            });
+            var identityUser = new CustomUser
+            {
+                UserName = request.UserName,
+                Email = request.Email,
+                EmailConfirmed = request.VerifyEmail,
+                PhoneNumber = request.Contact,
+                PhoneNumberConfirmed = request.VerifyContact,
+                Avatar = uploadResult.Uri.ToString(),
+                Status = request.Status,
+                FullName = request.FullName
+            };
+
+            var result = await _userManager.CreateAsync(identityUser, request.Password);
+            if (result.Succeeded)
+            {
+                var addRoleResult = await _userManager.AddToRoleAsync(identityUser, request.RoleName.IsNullOrEmpty() ? RoleConstant.USER : request.RoleName);
+                if (addRoleResult.Succeeded)
+                {
+                    return new CreateAccountResponse
+                    {
+                        Message = "Create user successfully!",
+                        IsSuccess = true
+                    };
+                }
+                return new CreateAccountResponse
+                {
+                    Message = "Can't add role to user!",
+                    IsSuccess = true
+                };
+            }
+
+            return new CreateAccountResponse
             {
                 Message = "Can't create user!",
                 IsSuccess = false,
@@ -145,37 +199,6 @@ namespace ShoppingOnline.BLL.Services.Impl
                 Message = "Login successfully!",
                 IsSuccess = true,
                 Token = tokenAsString
-            };
-        }
-
-        public async Task<ConfirmEmailResponse> ConfirmEmailAsync(string userId, string token)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return new ConfirmEmailResponse
-                {
-                    Message = "User not found!",
-                    IsSuccess = false
-                };
-            }
-
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-
-            if (result.Succeeded)
-            {
-                return new ConfirmEmailResponse
-                {
-                    Message = "Confirm email successfully",
-                    IsSuccess = true
-                };
-            }
-
-            return new ConfirmEmailResponse
-            {
-                Message = "Can't confirm email!",
-                IsSuccess = false,
-                Errors = result.Errors.Select(e => e.Description),
             };
         }
 
@@ -301,7 +324,11 @@ namespace ShoppingOnline.BLL.Services.Impl
             }
 
             user.FullName = request.FullName;
-            user.Avatar = request.Avatar;
+            var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
+            {
+                Base64 = request.Avatar
+            });
+            user.Avatar = uploadResult.Uri.ToString();
             user.PhoneNumber = request.Contact;
 
             var result = await _userManager.UpdateAsync(user);
@@ -405,6 +432,37 @@ namespace ShoppingOnline.BLL.Services.Impl
                 Status = user.Status.HasValue ? user.Status.Value : true,
                 VerifyEmail = user.EmailConfirmed,
                 VerifyPhone = user.PhoneNumberConfirmed
+            };
+        }
+
+        public async Task<ConfirmEmailResponse> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new ConfirmEmailResponse
+                {
+                    Message = "User not found!",
+                    IsSuccess = false
+                };
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return new ConfirmEmailResponse
+                {
+                    Message = "Confirm email successfully",
+                    IsSuccess = true
+                };
+            }
+
+            return new ConfirmEmailResponse
+            {
+                Message = "Can't confirm email!",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description),
             };
         }
     }

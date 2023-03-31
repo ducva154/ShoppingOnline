@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShoppingOnline.BLL.Services;
 using ShoppingOnline.BLL.Services.Impl;
-using ShoppingOnline.DTO.Models.Request;
+using ShoppingOnline.DTO.Models.Request.Review;
 
 namespace ShoppingOnline.Controllers
 {

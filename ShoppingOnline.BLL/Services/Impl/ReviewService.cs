@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ShoppingOnline.DAL.Repositories;
 using ShoppingOnline.DTO.Entities;
-using ShoppingOnline.DTO.Models.Request;
+using ShoppingOnline.DTO.Models.Request.Review;
 using ShoppingOnline.DTO.Models.Response.Review;
 using System;
 using System.Collections.Generic;

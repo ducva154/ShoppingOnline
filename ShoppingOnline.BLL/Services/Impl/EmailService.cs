@@ -1,13 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SendGrid.Helpers.Mail;
 using SendGrid;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Mail;
-using System.Net;
 
 namespace ShoppingOnline.BLL.Services.Impl
 {

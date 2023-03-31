@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShoppingOnline.DTO.Models.Request
+namespace ShoppingOnline.DTO.Models.Request.Review
 {
     public class AddReviewRequest
     {

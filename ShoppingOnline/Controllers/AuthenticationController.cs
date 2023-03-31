@@ -33,6 +33,22 @@ namespace ShoppingOnline.Controllers
             return BadRequest("Some properties are not valid!");
         }
 
+        [HttpPost("CreateAccount")]
+        public async Task<IActionResult> CreateAccountAsync([FromBody] CreateAccountRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.CreateAccountAsync(request);
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+
+            return BadRequest("Some properties are not valid!");
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
         {
