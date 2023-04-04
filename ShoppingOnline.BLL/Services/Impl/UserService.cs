@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ShoppingOnline.DTO.Models.Request.Image;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 
 namespace ShoppingOnline.BLL.Services.Impl
 {
@@ -109,10 +110,7 @@ namespace ShoppingOnline.BLL.Services.Impl
                     IsSuccess = false
                 };
             }
-            var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
-            {
-                Base64 = request.Avatar
-            });
+            var uploadResult = await _imageService.UploadImageAsync(request.Avatar);
             var identityUser = new CustomUser
             {
                 UserName = request.UserName,
@@ -128,7 +126,7 @@ namespace ShoppingOnline.BLL.Services.Impl
             var result = await _userManager.CreateAsync(identityUser, request.Password);
             if (result.Succeeded)
             {
-                var addRoleResult = await _userManager.AddToRoleAsync(identityUser, request.RoleName.IsNullOrEmpty() ? RoleConstant.USER : request.RoleName);
+                var addRoleResult = await _userManager.AddToRoleAsync(identityUser, request.RoleName);
                 if (addRoleResult.Succeeded)
                 {
                     return new CreateAccountResponse
@@ -324,10 +322,7 @@ namespace ShoppingOnline.BLL.Services.Impl
             }
 
             user.FullName = request.FullName;
-            var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
-            {
-                Base64 = request.Avatar
-            });
+            var uploadResult = await _imageService.UploadImageAsync(request.Avatar);
             user.Avatar = uploadResult.Uri.ToString();
             user.PhoneNumber = request.Contact;
 

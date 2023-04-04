@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace ShoppingOnline.DTO.Models.Request.Authentication
         public string RoleName { get; set; }
         [StringLength(50)]
         public string FullName { get; set; }
-        public string Avatar { get; set; }
+        public IFormFile Avatar { get; set; }
         [StringLength(20)]
         public string Contact { get; set; }
         public bool Status { get; set; }

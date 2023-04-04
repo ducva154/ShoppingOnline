@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShoppingOnline.BLL.Services;
 using ShoppingOnline.DTO.Models.Request.Authentication;
+using System.Security.Permissions;
 
 namespace ShoppingOnline.Controllers
 {
@@ -34,7 +35,7 @@ namespace ShoppingOnline.Controllers
         }
 
         [HttpPost("CreateAccount")]
-        public async Task<IActionResult> CreateAccountAsync([FromBody] CreateAccountRequest request)
+        public async Task<IActionResult> CreateAccountAsync([FromForm] CreateAccountRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +118,7 @@ namespace ShoppingOnline.Controllers
         }
 
         [HttpPut("EditProfile/{userId}")]
-        public async Task<IActionResult> EditProfileAsync(string userId, [FromBody] EditProfileRequest request)
+        public async Task<IActionResult> EditProfileAsync(string userId, [FromForm] EditProfileRequest request)
         {
             if (ModelState.IsValid)
             {

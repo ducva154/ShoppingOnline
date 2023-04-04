@@ -1,4 +1,5 @@
 ﻿using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using ShoppingOnline.DTO.Models.Request.Image;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace ShoppingOnline.BLL.Services
 {
     public interface IImageService
     {
-        Task<ImageUploadResult> UploadImageAsync(UploadImageRequest request);
+        Task<ImageUploadResult> UploadImageAsync(IFormFile file);
     }
 }

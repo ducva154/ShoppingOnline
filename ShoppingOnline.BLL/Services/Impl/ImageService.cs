@@ -2,6 +2,8 @@
 using CloudinaryDotNet.Actions;
 using ShoppingOnline.DTO.Models.Request.Image;
 using Microsoft.Extensions.Configuration;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ShoppingOnline.BLL.Services.Impl
 {
@@ -13,7 +15,7 @@ namespace ShoppingOnline.BLL.Services.Impl
             _configuration = configuration;
         }
 
-        public async Task<ImageUploadResult> UploadImageAsync(UploadImageRequest request)
+        public async Task<ImageUploadResult> UploadImageAsync(IFormFile file)
         {
             var account = new Account
             {
@@ -23,9 +25,10 @@ namespace ShoppingOnline.BLL.Services.Impl
             };
             var cloudinary = new Cloudinary(account);
 
+            using var stream = file.OpenReadStream();
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription($@"data:image/png;base64,{request.Base64}")
+                File = new FileDescription(file.FileName, stream)
             };
 
             var uploadResult =  await cloudinary.UploadAsync(uploadParams);

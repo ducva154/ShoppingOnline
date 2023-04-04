@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Middlewares\" />
     <Folder Include="Configs\" />
+    <Folder Include="Models\Request\Email\" />
   </ItemGroup>
 
 </Project>

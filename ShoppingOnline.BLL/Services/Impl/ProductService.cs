@@ -36,10 +36,7 @@ namespace ShoppingOnline.BLL.Services.Impl
 
             try
             {
-                var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
-                {
-                    Base64 = request.Image
-                });
+                var uploadResult = await _imageService.UploadImageAsync(request.Image);
                 var product = new Product
                 {
                     Name = request.Name,
@@ -95,10 +92,7 @@ namespace ShoppingOnline.BLL.Services.Impl
 
             try
             {
-                var uploadResult = await _imageService.UploadImageAsync(new UploadImageRequest
-                {
-                    Base64 = request.Image
-                });
+                var uploadResult = await _imageService.UploadImageAsync(request.Image);
                 product.Name = request.Name;
                 product.Description = request.Description;
                 product.Price = request.Price;
@@ -183,7 +177,6 @@ namespace ShoppingOnline.BLL.Services.Impl
                     Price = product.Price,
                     StockQuantity = product.StockQuantity,
                     Rating = product.Rating,
-                    //Categories = _unitOfWork.CategoryRepository.GetListCategoriesByProduct(product).Select(category => category.Name)
                     Categories = product.Categories.Select(category => category.Name)
                 })
             };

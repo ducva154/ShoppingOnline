@@ -19,7 +19,7 @@ namespace ShoppingOnline.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> AddProduct([FromBody] CreateProductRequest request)
+        public async Task<IActionResult> AddProduct([FromForm] CreateProductRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -34,7 +34,7 @@ namespace ShoppingOnline.Controllers
         }
 
         [HttpPut("Update/{productId}")]
-        public async Task<IActionResult> UpdateProduct(string productId, [FromBody] UpdateProductRequest request)
+        public async Task<IActionResult> UpdateProduct(string productId, [FromForm] UpdateProductRequest request)
         {
             if (ModelState.IsValid)
             {
