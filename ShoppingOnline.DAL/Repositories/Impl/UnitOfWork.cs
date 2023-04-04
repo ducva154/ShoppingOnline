@@ -10,92 +10,66 @@ namespace ShoppingOnline.DAL.Repositories.Impl
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext _context;
-        private IProductRepository _productRepository;
-        private ICategoryRepository _categoryRepository;
-        private IOrderRepository _orderRepository;
-        private IOrderDetailRepository _orderDetailRepository;
-        private ICartItemRepository _cartItemRepository;
-        private IReviewRepository _reviewRository;
-
-        public UnitOfWork(DbContext context)
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly ICartItemRepository _cartItemRepository;
+        private readonly IReviewRepository _reviewRepository;
+        public UnitOfWork(DbContext context, IProductRepository productRepository,
+                            ICategoryRepository categoryRepository,
+                            IOrderRepository orderRepository,
+                            IOrderDetailRepository orderDetailRepository,
+                            ICartItemRepository cartItemRepository,
+                            IReviewRepository reviewRository)
         {
-                _context = context;
+            _context = context;
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
+            _orderRepository = orderRepository;
+            _orderDetailRepository = orderDetailRepository;
+            _cartItemRepository = cartItemRepository;
+            _reviewRepository = reviewRository;
         }
-        
+
         public IProductRepository ProductRepository
         {
-            get
-            {
-                if (_productRepository == null)
-                {
-                    _productRepository = new ProductRepository(_context);
-                }
-                return _productRepository;
-            }
+            get { return _productRepository; }
         }
 
         public ICategoryRepository CategoryRepository
         {
-            get
-            {
-                if (_categoryRepository == null)
-                {
-                    _categoryRepository = new CategoryRepository(_context);
-                }
-                return _categoryRepository;
-            }
-        }
-        public IOrderRepository OrderRepository
-        {
-            get
-            {
-                if (_orderRepository == null)
-                {
-                    _orderRepository = new OrderRepository(_context);
-                }
-                return _orderRepository;
-            }
+            get { return _categoryRepository; }
         }
 
         public IOrderDetailRepository OrderDetailRepository
         {
-            get
-            {
-                if (_orderDetailRepository == null)
-                {
-                    _orderDetailRepository = new OrderDetailRepository(_context);
-                }
-                return _orderDetailRepository;
-            }
+            get { return _orderDetailRepository; }
+        }
+
+        public IOrderRepository OrderRepository
+        {
+            get { return _orderRepository; }
         }
 
         public ICartItemRepository CartItemRepository
         {
-            get
-            {
-                if (_cartItemRepository == null)
-                {
-                    _cartItemRepository = new CartItemRepository(_context);
-                }
-                return _cartItemRepository;
-            }
+            get { return _cartItemRepository; }
         }
 
         public IReviewRepository ReviewRepository
         {
-            get
-            {
-                if (_reviewRository == null)
-                {
-                    _reviewRository = new ReviewRepository(_context);
-                }
-                return _reviewRository;
-            }
+            get { return _reviewRepository; }
         }
 
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        void IUnitOfWork.SaveChanges()
+        {
+            throw new NotImplementedException();
         }
     }
 }
